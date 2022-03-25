@@ -1,0 +1,195 @@
+SQLite version 3.38.0 2022-02-22 18:58:40
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> .open northwind.db;
+sqlite> CREATE TRIGGER insert_territory after insert ON territories
+   ...> begin
+   ...>  insert into new_territories(name) values(new.territory_description);
+   ...> end;
+Parse error: no such table: main.territories
+sqlite> drop trigger if exists validate_territory_before_insert;
+sqlite> drop trigger if exists validate_territory_before_insert;
+sqlite> drop trigger if exists validate_territory_before_insert;
+sqlite> drop trigger if exists validate_territory_before_insert;
+sqlite> .tables
+sqlite> .open northwind.db
+sqlite> .tables
+cat_prod                employees               region
+categories              new_territories         shippers
+customer_customer_demo  order_details           suppliers
+customer_demographics   orders                  territories
+customers               products                us_states
+employee_territories    reg_ter
+sqlite> CREATE TRIGGER validate_territory_before_insert
+   ...>    BEFORE INSERT ON territories
+   ...> BEGIN
+   ...>    SELECT
+   ...>       CASE
+   ...> WHEN NEW.territory_description NOT LIKE '%__' THEN
+   ...>      RAISE (ABORT,'Invalid name of territory')
+   ...>        END;
+   ...> END;
+sqlite> CREATE TRIGGER insert_territory after insert ON territories
+   ...> BEGIN
+   ...>     insert into new_territories(name) values(new.territory_description);
+   ...> END;
+Parse error: trigger insert_territory already exists
+  CREATE TRIGGER insert_territory after insert ON territories BEGIN     insert i
+                 ^--- error here
+sqlite> drop trigger if exists insert_territory
+   ...> ;
+sqlite> CREATE TRIGGER insert_territory after insert ON territories
+   ...> BEGIN
+   ...>     insert into new_territories(name) values(new.territory_description);
+   ...> END;
+sqlite> insert into territories (territory_id, territory_description, region_id) values (98107, 'new ter 1', 1);
+sqlite> select * from new_territories;
+1|new ter 1
+sqlite> .mode box
+sqlite> select * from new_territories;
+┌────┬───────────┐
+│ id │   name    │
+├────┼───────────┤
+│ 1  │ new ter 1 │
+└────┴───────────┘
+sqlite> select * from new_territories;
+┌────┬───────────┐
+│ id │   name    │
+├────┼───────────┤
+│ 1  │ new ter 1 │
+└────┴───────────┘
+sqlite> insert into territories (territory_id, territory_description, region_id) values (98107, 'new ter 1', 1);
+Runtime error: UNIQUE constraint failed: territories.territory_id (19)
+sqlite> select * from new_territories;
+┌────┬───────────┐
+│ id │   name    │
+├────┼───────────┤
+│ 1  │ new ter 1 │
+└────┴───────────┘
+sqlite> driop
+   ...> ;
+Parse error: near "driop": syntax error
+  driop ;
+  ^--- error here
+sqlite> drop index if exists ind_territory;
+sqlite> create index ind_territory on territorys (territort_description);
+Parse error: no such table: main.territorys
+sqlite> create index ind_territory on territories (territort_description);
+Parse error: no such column: territort_description
+  create index ind_territory on territories (territort_description);
+                               error here ---^
+sqlite> create index ind_territory on territories (territory_description);
+sqlite> select * from territories where territort_description like 'Redmond';
+Parse error: no such column: territort_description
+  select * from territories where territort_description like 'Redmond';
+                    error here ---^
+sqlite> select * from territories where territoryes_description like 'Redmond';
+Parse error: no such column: territoryes_description
+  select * from territories where territoryes_description like 'Redmond';
+                    error here ---^
+sqlite> select * from territories where territory_description like 'Redmond';
+┌──────────────┬───────────────────────┬───────────┐
+│ territory_id │ territory_description │ region_id │
+├──────────────┼───────────────────────┼───────────┤
+│ 98052        │ Redmond               │ 2         │
+└──────────────┴───────────────────────┴───────────┘
+sqlite> pragma index list(territories);
+Parse error: near "index": syntax error
+  pragma index list(territories);
+         ^--- error here
+sqlite> pragma index_list(territories);
+┌─────┬────────────────────────────────┬────────┬────────┬─────────┐
+│ seq │              name              │ unique │ origin │ partial │
+├─────┼────────────────────────────────┼────────┼────────┼─────────┤
+│ 0   │ ind_territory                  │ 0      │ c      │ 0       │
+│ 1   │ sqlite_autoindex_territories_1 │ 1      │ pk     │ 0       │
+└─────┴────────────────────────────────┴────────┴────────┴─────────┘
+sqlite> explain query plan
+   ...> SELECT territory_description FROM territories
+   ...> WHERE territory_description like 'R%';
+QUERY PLAN
+`--SCAN territories USING COVERING INDEX ind_territory
+sqlite> CREATE TABLE accounts (
+   ...> account_no INTEGER NOT NULL,
+   ...> balance DECIMAL NOT NULL DEFAULT 0,
+   ...> PRIMARY KEY(account_no),
+   ...>         CHECK(balance >= 0)
+   ...> );
+sqlite> select * from accounts
+   ...> ;
+sqlite> select * from accounts;
+sqlite> CREATE TABLE account_changes (
+   ...> change_no integer PRIMARY KEY autoincrement,
+   ...> account_no INTEGER NOT NULL,
+   ...> flag TEXT NOT NULL,
+   ...> amount DECIMAL NOT NULL,
+   ...> changed_at TEXT NOT NULL
+   ...> );
+sqlite> .tables
+account_changes         employee_territories    region
+accounts                employees               shippers
+cat_prod                new_territories         suppliers
+categories              order_details           territories
+customer_customer_demo  orders                  us_states
+customer_demographics   products
+customers               reg_ter
+sqlite> INSERT INTO accounts (account_no,balance) VALUES (100,2000);
+sqlite> INSERT INTO accounts (account_no,balance) VALUES (200,1000);
+sqlite> select * from accounts;
+┌────────────┬─────────┐
+│ account_no │ balance │
+├────────────┼─────────┤
+│ 100        │ 2000    │
+│ 200        │ 1000    │
+└────────────┴─────────┘
+sqlite> account_changes(account_no,flag,amount,changed_at)
+   ...> VALUES(200,'+',100,datetime('now'));
+Parse error: near "account_changes": syntax error
+  account_changes(account_no,flag,amount,changed_at)  VALUES(200,'+',100,datetim
+  ^--- error here
+sqlite> account_changes(account_no,flag,amount,changed_at)
+   ...> VALUES(200,'+',100,datetime('now'));
+Parse error: near "account_changes": syntax error
+  account_changes(account_no,flag,amount,changed_at)  VALUES(200,'+',100,datetim
+  ^--- error here
+sqlite> account_changes(account_no,flag,amount,changed_at)
+   ...> ;
+Parse error: near "account_changes": syntax error
+  account_changes(account_no,flag,amount,changed_at)  ;
+  ^--- error here
+sqlite> INSERT INTO account_changes(account_no,flag,amount,changed_at)
+   ...> VALUES(200,'+',100,datetime('now'));
+sqlite> select * from account_changes;
+┌───────────┬────────────┬──────┬────────┬─────────────────────┐
+│ change_no │ account_no │ flag │ amount │     changed_at      │
+├───────────┼────────────┼──────┼────────┼─────────────────────┤
+│ 1         │ 200        │ +    │ 100    │ 2022-03-25 17:30:21 │
+└───────────┴────────────┴──────┴────────┴─────────────────────┘
+sqlite> commit;
+Runtime error: cannot commit - no transaction is active
+sqlite> commit;
+Runtime error: cannot commit - no transaction is active
+sqlite> BEGIN TRANSACTION;
+sqlite> UPDATE accounts SET balance = balance - 100 WHERE account_no = 100;
+sqlite> UPDATE accounts SET balance = balance + 100 WHERE account_no = 200;
+sqlite> INSERT INTO account_changes(account_no,flag,amount,changed_at)
+   ...> VALUES(100,'-',100,datetime('now'));
+sqlite>
+sqlite> INSERT INTO account_changes(account_no,flag,amount,changed_at)
+   ...> VALUES(200,'+',100,datetime('now'));
+sqlite>
+sqlite> COMMIT;
+sqlite> select * from account_changes;
+┌───────────┬────────────┬──────┬────────┬─────────────────────┐
+│ change_no │ account_no │ flag │ amount │     changed_at      │
+├───────────┼────────────┼──────┼────────┼─────────────────────┤
+│ 1         │ 200        │ +    │ 100    │ 2022-03-25 17:30:21 │
+│ 2         │ 100        │ -    │ 100    │ 2022-03-25 17:32:55 │
+│ 3         │ 200        │ +    │ 100    │ 2022-03-25 17:32:55 │
+└───────────┴────────────┴──────┴────────┴─────────────────────┘
+sqlite> i don't no man
+   ...> Really?
+   ...> ;
+   ...> ;
+   ...>
